@@ -34,7 +34,13 @@ class ViewController: UIViewController, ARSCNViewDelegate {
         super.viewWillAppear(animated)
         
         // Create a session configuration
-        let configuration = ARWorldTrackingConfiguration()
+        let configuration = ARImageTrackingConfiguration()
+        guard let trackedImages = ARReferenceImage.referenceImages(inGroupNamed: "ARResources", bundle: Bundle.main) else {
+            print("No images available")
+            return
+        }
+        configuration.trackingImages = trackedImages
+        configuration.maximumNumberOfTrackedImages = 1
 
         // Run the view's session
         sceneView.session.run(configuration)
@@ -49,6 +55,27 @@ class ViewController: UIViewController, ARSCNViewDelegate {
 
     // MARK: - ARSCNViewDelegate
     
+    func renderer(_ renderer: SCNSceneRenderer, nodeFor anchor: ARAnchor) -> SCNNode? {
+        let node = SCNNode()
+        if let imageAnchor = anchor as? ARImageAnchor {
+            let plane = SCNPlane(width: imageAnchor.referenceImage.physicalSize.width, height: imageAnchor.referenceImage.physicalSize.height)
+            
+            plane.firstMaterial?.diffuse.contents = UIColor(white: 1, alpha: 0.8)
+            
+            let planeNode = SCNNode(geometry: plane)
+            planeNode.eulerAngles.x = -.pi/2
+            let shipScene = SCNScene(named: "art.scnassets/ship.scn")!
+            let shipNode = shipScene.rootNode.childNodes.first!
+            shipNode.position = SCNVector3Zero
+            shipNode.position.z = 0.15
+            planeNode.addChildNode(shipNode)
+            node.addChildNode(planeNode)
+        }
+        return node
+    }
+    
+    
+    //guy in tutorial just removed all of these idk
 /*
     // Override to create and configure nodes for anchors added to the view's session.
     func renderer(_ renderer: SCNSceneRenderer, nodeFor anchor: ARAnchor) -> SCNNode? {
@@ -56,7 +83,6 @@ class ViewController: UIViewController, ARSCNViewDelegate {
      
         return node
     }
-*/
     
     func session(_ session: ARSession, didFailWithError error: Error) {
         // Present an error message to the user
@@ -70,6 +96,6 @@ class ViewController: UIViewController, ARSCNViewDelegate {
     
     func sessionInterruptionEnded(_ session: ARSession) {
         // Reset tracking and/or remove existing anchors if consistent tracking is required
-        
     }
+*/
 }
