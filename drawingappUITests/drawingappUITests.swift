@@ -1,6 +1,6 @@
 //
-//  iosfinalUITests.swift
-//  iosfinalUITests
+//  drawingappUITests.swift
+//  drawingappUITests
 //
 //  Created by Ian Huang on 3/8/20.
 //  Copyright © 2020 Stulin iOS. All rights reserved.
@@ -8,7 +8,7 @@
 
 import XCTest
 
-class iosfinalUITests: XCTestCase {
+class drawingappUITests: XCTestCase {
 
     override func setUp() {
         // Put setup code here. This method is called before the invocation of each test method in the class.
